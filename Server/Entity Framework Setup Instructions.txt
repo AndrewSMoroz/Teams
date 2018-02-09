@@ -1,0 +1,12 @@
+﻿
+- To disable proxy class creation, added the following code to line 61 (inside constructor) of TeamsContext.Context.tt:
+
+		this.Configuration.ProxyCreationEnabled = false;
+
+- To use lambda expressions in Include methods in LINQ queries, added the following to any repository class that needs it:
+
+		using System.Data.Entity;
+
+- To prevent Newtonsoft from attempting to serialize circular references, added the following to WebApiConfig.cs:
+
+		config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
