@@ -12,6 +12,7 @@ namespace Server.Data
 
         List<Team> GetAllTeams();
         Team GetTeamByID(int ID);
+        void InsertTeam(string teamName, string teamHome, int teamTypeID);
 
     }
 

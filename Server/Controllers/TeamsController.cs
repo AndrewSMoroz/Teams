@@ -1,4 +1,5 @@
 ﻿using Server.Data;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +34,9 @@ namespace Server.Controllers
         }
 
         // POST: api/teams
-        public void Post([FromBody]string value)
+        public void Post([FromBody] TeamModel teamModel)
         {
+            _TeamRepository.InsertTeam(teamModel.name, teamModel.home, teamModel.teamTypeID);
         }
 
         // PUT: api/teams/5

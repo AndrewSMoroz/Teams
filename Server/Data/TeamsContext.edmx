@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TeamsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="TeamsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Player">
           <Key>
             <PropertyRef Name="ID" />
@@ -55,6 +55,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="InsertTeam" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="Home" Type="nvarchar" Mode="In" />
+          <Parameter Name="TeamTypeID" Type="int" Mode="In" />
+        </Function>
         <EntityContainer Name="TeamsModelStoreContainer">
           <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Team" EntityType="Self.Team" Schema="dbo" store:Type="Tables" />
@@ -68,8 +73,7 @@
             <End Role="Team" EntitySet="Team" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TeamsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -139,6 +143,11 @@
             <End Role="TeamType" EntitySet="TeamTypes" />
             <End Role="Team" EntitySet="Teams" />
           </AssociationSet>
+          <FunctionImport Name="InsertTeam">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Home" Mode="In" Type="String" />
+            <Parameter Name="TeamTypeID" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -165,6 +174,15 @@
                 <ScalarProperty Name="TeamTypeID" ColumnName="TeamTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
+            <EntityTypeMapping TypeName="TeamsModel.Team">
+              <ModificationFunctionMapping>
+                <InsertFunction FunctionName="TeamsModel.Store.InsertTeam">
+                  <ScalarProperty Name="TeamTypeID" ParameterName="TeamTypeID" />
+                  <ScalarProperty Name="Home" ParameterName="Home" />
+                  <ScalarProperty Name="Name" ParameterName="Name" />
+                </InsertFunction>
+              </ModificationFunctionMapping>
+            </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TeamTypes">
             <EntityTypeMapping TypeName="TeamsModel.TeamType">
@@ -175,6 +193,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InsertTeam" FunctionName="TeamsModel.Store.InsertTeam" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

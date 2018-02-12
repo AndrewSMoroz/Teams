@@ -12,6 +12,8 @@ namespace Server.Data
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class TeamsContext : DbContext
     {
@@ -30,5 +32,22 @@ namespace Server.Data
         public virtual DbSet<Player> Players { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamType> TeamTypes { get; set; }
+    
+        public virtual int InsertTeam(string name, string home, Nullable<int> teamTypeID)
+        {
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var homeParameter = home != null ?
+                new ObjectParameter("Home", home) :
+                new ObjectParameter("Home", typeof(string));
+    
+            var teamTypeIDParameter = teamTypeID.HasValue ?
+                new ObjectParameter("TeamTypeID", teamTypeID) :
+                new ObjectParameter("TeamTypeID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertTeam", nameParameter, homeParameter, teamTypeIDParameter);
+        }
     }
 }

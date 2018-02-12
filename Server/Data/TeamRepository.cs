@@ -39,6 +39,25 @@ namespace Server.Data
 
         }
 
+        //--------------------------------------------------------------------------------------------------------------
+        public void InsertTeam(string teamName, string teamHome, int teamTypeID)
+        {
+
+            Team newTeam = new Team
+            {
+                Name = teamName,
+                Home = teamHome,
+                TeamTypeID = teamTypeID
+            };
+
+            using (TeamsContext context = new TeamsContext())
+            {
+                context.Teams.Add(newTeam);
+                context.SaveChanges();
+            }
+
+        }
+
     }
 
 }
